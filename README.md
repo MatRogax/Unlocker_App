@@ -1,15 +1,15 @@
 # 📱 Nome do App
 
-Bem-vindo ao **Nome do App**! 🚀  
-Este aplicativo foi desenvolvido com Flutter e tem como objetivo proporcionar uma experiência fluida e intuitiva para os usuários.
+Bem-vindo ao **Game Unlocker**! 🚀  
+Este aplicativo foi desenvolvido com Flutter e tem como objetivo proporcionar uma experiência fluida e intuitiva para os usuarios que compram jogos online
 
 ## Telas
 
-![Captura de tela do meu projeto](.assets/prints/tela_de_pesquisa)
-![Captura de tela do meu projeto](.assets/prints/pagina_de_inicio)
-![Captura de tela do meu projeto](.assets/prints/pagina_de_cadastro)
-![Captura de tela do meu projeto](.assets/prints/tela_de_login)
-![Captura de tela do meu projeto](.assets/prints/tela_de_compra)
+![Página de Início](assets/prints/pagina_de_inicio.png)
+![Página de Cadastro](assets/prints/pagina_de_cadastro.png)
+![Tela de Login](assets/prints/tela_de_login.png)
+![Tela de Compra](assets/prints/tela_de_compra.png)
+![Tela de Pesquisa](assets/prints/tela_de_pesquisa.png)
 
 ## 🔥 Funcionalidades
 
