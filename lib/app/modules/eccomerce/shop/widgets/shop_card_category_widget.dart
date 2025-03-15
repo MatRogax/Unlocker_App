@@ -8,11 +8,6 @@ class ShopCategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: size.height * 0.022,
-      width: size.width * 0.28,
-      decoration: decoration,
-      child: childCard,
-    );
+    return Container(height: size.height * 0.022, width: size.width * 0.28, decoration: decoration, child: childCard);
   }
 }

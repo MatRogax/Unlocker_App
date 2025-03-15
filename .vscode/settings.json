@@ -1,4 +1,5 @@
 {
   "totvsLanguageServer.welcomePage": false,
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "cmake.sourceDirectory": "C:/Users/mathe/OneDrive/Documentos/GitHub/projeto_unloucker/windows"
 }

@@ -21,7 +21,6 @@ class _CustomCarouselState extends State<CustomCarousel> {
   void initState() {
     super.initState();
 
-    // Inicia o timer para auto-scroll
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_currentIndex < widget.images.length - 1) {
         _currentIndex++;

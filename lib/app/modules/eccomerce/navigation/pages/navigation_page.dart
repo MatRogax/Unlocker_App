@@ -15,7 +15,6 @@ class _NavigationPageState extends State<NavigationPage> {
   int currentIndex = 0;
   final List<Map<String, dynamic>> pages = [
     {"title": "GameUnloucker", "page": const ShopPage()},
-    {"title": "Carrinho", "page": const HomePage()},
     {"title": "Pesquisa", "page": const SearchPage()},
     {"title": "chat", "page": ""},
     {"title": "perfil", "page": ""},
@@ -39,10 +38,6 @@ class _NavigationPageState extends State<NavigationPage> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
           BottomNavigationBarItem(icon: Icon(Icons.manage_search_sharp), label: ""),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.shopping_bag),
-          //   label: "",
-          // ),
           BottomNavigationBarItem(icon: Icon(Icons.chat_rounded), label: ""),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
         ],

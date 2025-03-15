@@ -72,7 +72,7 @@ class _WidgetRegisterFormState extends State<WidgetFormLogin> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 labelText: 'Endereço de email',
-                labelStyle: TextStyle(height: 0.2, color: Colors.grey.withOpacity(0.8)),
+                labelStyle: TextStyle(height: 0.2, color: Colors.grey.withValues(alpha: 0.8)),
               ),
               keyboardType: TextInputType.emailAddress,
               name: 'email',
@@ -90,9 +90,9 @@ class _WidgetRegisterFormState extends State<WidgetFormLogin> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 labelText: 'Senha',
-                labelStyle: TextStyle(height: 0.2, color: Colors.grey.withOpacity(0.8)),
+                labelStyle: TextStyle(height: 0.2, color: Colors.grey.withValues(alpha: 0.8)),
                 suffixIcon: IconButton(
-                  icon: Icon(isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.grey.withOpacity(0.8)),
+                  icon: Icon(isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.grey.withValues(alpha: 0.8)),
                   onPressed: () {
                     setState(() {
                       isPasswordVisible = !isPasswordVisible;
@@ -127,9 +127,9 @@ class _WidgetRegisterFormState extends State<WidgetFormLogin> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Container(width: size.width * 0.3, height: size.height * 0.003, decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1))),
+              Container(width: size.width * 0.3, height: size.height * 0.003, decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.1))),
               const Text("Ou entre com", style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold)),
-              Container(width: size.width * 0.3, height: size.height * 0.003, decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1))),
+              Container(width: size.width * 0.3, height: size.height * 0.003, decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.1))),
             ],
           ),
           Padding(

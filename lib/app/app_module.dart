@@ -15,6 +15,7 @@ class AppNavigator {
         return MaterialPageRoute(builder: (_) => const LoginPage());
       case '/shop':
         return MaterialPageRoute(builder: (_) => const NavigationPage());
+      case '/search':
       default:
         return MaterialPageRoute(builder: (_) => const Scaffold(body: Center(child: Text('Rota não Encontrada!'))));
     }
