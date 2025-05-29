@@ -5,7 +5,6 @@ Este aplicativo foi desenvolvido com Flutter e tem como objetivo proporcionar um
 
 ## Telas
 
-![Página de Início](assets/prints/pagina_de_inicio.png)
 ![Página de Cadastro](assets/prints/pagina_de_cadastro.png)
 ![Tela de Login](assets/prints/tela_de_login.png)
 ![Tela de Compra](assets/prints/tela_de_compra.png)
