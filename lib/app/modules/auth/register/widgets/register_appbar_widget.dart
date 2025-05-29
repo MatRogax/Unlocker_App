@@ -20,7 +20,7 @@ class Appbar extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back, color: Colors.white)),
+                  // IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back, color: Colors.white)),
                   const Padding(
                     padding: EdgeInsets.only(left: 8.0),
                     child: Text("Você já tem uma conta?", style: TextStyle(color: Colors.white, fontSize: 16)),

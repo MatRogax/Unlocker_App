@@ -23,4 +23,38 @@ class Utils {
     final options = BaseOptions(baseUrl: apiBaseUrl);
     return Dio(options);
   }
+
+  static void showSuccess({required BuildContext context, required String message}) {
+    _showSnackbar(context: context, message: message, backgroundColor: Colors.green.shade700, icon: Icons.check_circle_outline);
+  }
+
+  static void showError({required BuildContext context, required String message}) {
+    _showSnackbar(context: context, message: message, backgroundColor: Colors.red.shade800, icon: Icons.error_outline);
+  }
+
+  static void showInfo({required BuildContext context, required String message}) {
+    _showSnackbar(context: context, message: message, backgroundColor: Colors.blue.shade700, icon: Icons.info_outline);
+  }
+
+  static void _showSnackbar({required BuildContext context, required String message, required Color backgroundColor, required IconData icon}) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    final snackbar = SnackBar(
+      content: Row(
+        children: [
+          Icon(icon, color: Colors.white),
+          const SizedBox(width: 12.0),
+          Expanded(child: Text(message, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15))),
+        ],
+      ),
+      backgroundColor: backgroundColor,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      duration: const Duration(seconds: 4),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
 }

@@ -34,12 +34,7 @@ class _NavigationPageState extends State<NavigationPage> {
             currentIndex = index;
           });
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.manage_search_sharp), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.chat_rounded), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
-        ],
+        items: const [BottomNavigationBarItem(icon: Icon(Icons.home), label: ""), BottomNavigationBarItem(icon: Icon(Icons.manage_search_sharp), label: "")],
       ),
     );
   }
