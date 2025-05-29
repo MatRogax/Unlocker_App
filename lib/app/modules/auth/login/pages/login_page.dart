@@ -40,12 +40,18 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             Column(
                               children: [
-                                const Text("Entre com Suas Credenciais", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                                Padding(
+                                  padding: EdgeInsets.only(top: size.height * 0.142),
+                                  child: const Text("Entre com Suas Credenciais", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                                ),
                                 Padding(
                                   padding: EdgeInsets.only(top: size.height * 0.025, bottom: size.height * 0.02),
-                                  child: const Text("Pronto para desbloquear novos mundos?", style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold)),
+                                  child: const Text(
+                                    "Pronto para desbloquear novos mundos?",
+                                    style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                                const WidgetFormLogin(),
+                                Padding(padding: EdgeInsets.only(top: size.height * 0.02), child: const WidgetFormLogin()),
                               ],
                             ),
                           ],

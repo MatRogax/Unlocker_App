@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:projeto_unloucker/app/modules/auth/register/widgets/register_formfield_widget.dart';
+import 'package:projeto_unloucker/app/modules/auth/services/controller/register_controller.dart';
+import 'package:projeto_unloucker/app/modules/auth/services/model/register_model.dart';
 import 'package:projeto_unloucker/app/utils/constants.dart';
 
 class WidgetRegisterForm extends StatefulWidget {
@@ -13,41 +15,56 @@ class WidgetRegisterForm extends StatefulWidget {
 
 class _WidgetRegisterFormState extends State<WidgetRegisterForm> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController mailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController mailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  RegisterController controller = RegisterController();
 
-  FocusNode focusName = FocusNode();
-  FocusNode focusmail = FocusNode();
-  FocusNode focusPass = FocusNode();
+  final FocusNode focusName = FocusNode();
+  final FocusNode focusmail = FocusNode();
+  final FocusNode focusPass = FocusNode();
 
-  bool isValidForm = false;
   bool isPasswordVisible = false;
+  bool isLoading = false;
 
   void clearForm() {
-    setState(() {
-      nameController.clear();
-      mailController.clear();
-      passwordController.clear();
-      isValidForm = false;
-    });
+    nameController.clear();
+    mailController.clear();
+    passwordController.clear();
+    _formKey.currentState?.reset();
   }
 
-  void validateForm() {
-    nameController.addListener(() {
-      _formKey.currentState?.validate();
-    });
-    mailController.addListener(() {
-      _formKey.currentState?.validate();
-    });
-    passwordController.addListener(() {
-      _formKey.currentState?.validate();
-    });
+  Future<void> _submitForm() async {
+    final isValid = _formKey.currentState?.saveAndValidate() ?? false;
+    if (!isValid) return;
+
+    setState(() => isLoading = true);
+
+    try {
+      final data = _formKey.currentState!.value;
+      final model = RegisterModel(name: data['nome'], email: data['email'], password: data['senha'], role: "user");
+
+      final success = await controller.registerUser(model);
+
+      if (success) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cadastro realizado com sucesso!')));
+        clearForm();
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Falha no cadastro. Tente novamente.')));
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro: $e')));
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return FormBuilder(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -55,65 +72,50 @@ class _WidgetRegisterFormState extends State<WidgetRegisterForm> {
         children: [
           WigetFormField(
             child: FormBuilderTextField(
+              name: 'nome',
               controller: nameController,
               focusNode: focusName,
-              onSubmitted: (value) => focusmail.requestFocus(),
+              onSubmitted: (_) => focusmail.requestFocus(),
               textInputAction: TextInputAction.next,
-              validator: FormBuilderValidators.compose([FormBuilderValidators.required(errorText: 'nome é obrigatório!')]),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                labelText: 'Nome',
-                labelStyle: TextStyle(height: 0.2, color: Colors.grey.withValues(alpha: 0.8)),
-              ),
-              keyboardType: TextInputType.text,
-              name: 'nome',
+              validator: FormBuilderValidators.required(errorText: 'Nome é obrigatório!'),
+              decoration: _inputDecoration('Nome'),
             ),
           ),
           const SizedBox(height: 16.0),
           WigetFormField(
             child: FormBuilderTextField(
+              name: 'email',
               controller: mailController,
               focusNode: focusmail,
-              onSubmitted: (value) => focusPass.requestFocus(),
+              onSubmitted: (_) => focusPass.requestFocus(),
               textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.emailAddress,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(errorText: 'E-mail é obrigatório!'),
                 FormBuilderValidators.email(errorText: 'Digite um e-mail válido!'),
               ]),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                labelText: 'Endereço de email',
-                labelStyle: TextStyle(height: 0.2, color: Colors.grey.withValues(alpha: 0.8)),
-              ),
-              keyboardType: TextInputType.emailAddress,
-              name: 'email',
+              decoration: _inputDecoration('Endereço de email'),
             ),
           ),
           const SizedBox(height: 16.0),
           WigetFormField(
             child: FormBuilderTextField(
+              name: 'senha',
               controller: passwordController,
               focusNode: focusPass,
+              obscureText: !isPasswordVisible,
+              textInputAction: TextInputAction.done,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(errorText: 'A senha é obrigatória!'),
                 FormBuilderValidators.minLength(6, errorText: 'A senha deve ter pelo menos 6 caracteres!'),
               ]),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                labelText: 'Senha',
-                labelStyle: TextStyle(height: 0.2, color: Colors.grey.withValues(alpha: 0.8)),
+              decoration: _inputDecoration(
+                'Senha',
                 suffixIcon: IconButton(
-                  icon: Icon(isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.grey.withValues(alpha: 0.8)),
-                  onPressed: () {
-                    setState(() {
-                      isPasswordVisible = !isPasswordVisible;
-                    });
-                  },
+                  icon: Icon(isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.grey.withOpacity(0.8)),
+                  onPressed: () => setState(() => isPasswordVisible = !isPasswordVisible),
                 ),
               ),
-              obscureText: !isPasswordVisible,
-              textInputAction: TextInputAction.done,
-              name: 'senha',
             ),
           ),
           TextButton(
@@ -126,74 +128,29 @@ class _WidgetRegisterFormState extends State<WidgetRegisterForm> {
               width: size.width * 0.8,
               height: size.height * 0.07,
               child: ElevatedButton(
+                onPressed: isLoading ? null : _submitForm,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Constants.primaryMedium,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
-                onPressed: () => validateForm(),
-                child: const Text("Sign Up", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                child:
+                    isLoading
+                        ? const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+                        : const Text("Sign Up", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
               ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(width: size.width * 0.3, height: size.height * 0.003, decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.1))),
-              const Text("Ou entre com", style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold)),
-              Container(width: size.width * 0.3, height: size.height * 0.003, decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.1))),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: size.height * 0.02),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: size.width * 0.38,
-                  child: ElevatedButton(
-                    onPressed: () => null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      elevation: 1,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Image.asset('assets/images/google_icon.png', height: 24),
-                        const SizedBox(width: 8),
-                        const Text('Google', style: TextStyle(color: Colors.black87, fontSize: 14)),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                SizedBox(
-                  width: size.width * 0.38,
-                  child: ElevatedButton(
-                    onPressed: () => null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      elevation: 1,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Image.asset('assets/images/steam_icon.png', height: 24),
-                        const SizedBox(width: 8),
-                        const Text('Steam', style: TextStyle(color: Colors.black87, fontSize: 14)),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  InputDecoration _inputDecoration(String label, {Widget? suffixIcon}) {
+    return InputDecoration(
+      border: InputBorder.none,
+      labelText: label,
+      labelStyle: TextStyle(height: 0.2, color: Colors.grey.withOpacity(0.8)),
+      suffixIcon: suffixIcon,
     );
   }
 }

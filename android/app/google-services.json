@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "267673672727",
+    "project_id": "unlocker-938eb",
+    "storage_bucket": "unlocker-938eb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267673672727:android:d6ad3aac71a74ed7c55052",
+        "android_client_info": {
+          "package_name": "com.example.projeto_unloucker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa2PaJfgLccdUAmK1okV9WXJEVOdKr9UU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

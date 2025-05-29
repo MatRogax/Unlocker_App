@@ -124,63 +124,6 @@ class _WidgetRegisterFormState extends State<WidgetFormLogin> {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(width: size.width * 0.3, height: size.height * 0.003, decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.1))),
-              const Text("Ou entre com", style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold)),
-              Container(width: size.width * 0.3, height: size.height * 0.003, decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.1))),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: size.height * 0.02),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: size.width * 0.38,
-                  child: ElevatedButton(
-                    onPressed: () => null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      elevation: 1,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Image.asset('assets/images/google_icon.png', height: 24),
-                        const SizedBox(width: 8),
-                        const Text('Google', style: TextStyle(color: Colors.black87, fontSize: 14)),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                SizedBox(
-                  width: size.width * 0.38,
-                  child: ElevatedButton(
-                    onPressed: () => null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      elevation: 1,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Image.asset('assets/images/steam_icon.png', height: 24),
-                        const SizedBox(width: 8),
-                        const Text('Steam', style: TextStyle(color: Colors.black87, fontSize: 14)),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

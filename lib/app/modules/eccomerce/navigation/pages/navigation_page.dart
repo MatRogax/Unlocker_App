@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_unloucker/app/modules/eccomerce/search/pages/search_page.dart';
 import 'package:projeto_unloucker/app/modules/eccomerce/shop/pages/shop_page.dart';
-import 'package:projeto_unloucker/app/modules/home/pages/home_page.dart';
 import 'package:projeto_unloucker/app/utils/constants.dart';
 
 class NavigationPage extends StatefulWidget {
