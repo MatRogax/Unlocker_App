@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:projeto_unloucker/app/modules/auth/register/widgets/register_formfield_widget.dart';
-import 'package:projeto_unloucker/app/modules/auth/services/cubit/auth_cubit.dart';
+import 'package:projeto_unloucker/app/modules/auth/services/cubit/auth_controller.dart';
 import 'package:projeto_unloucker/app/modules/auth/services/model/auth_model.dart';
 import 'package:projeto_unloucker/app/utils/constants.dart';
 import 'package:projeto_unloucker/app/utils/utils.dart';
@@ -38,23 +38,23 @@ class _WidgetRegisterFormState extends State<WidgetRegisterForm> {
 
     final model = AuthModel(email: data['email'], password: data['senha']);
 
-    await context.read<AuthCubit>().performSignUp(model);
+    await context.read<AuthController>().performSignUp(model);
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return BlocListener<AuthCubit, AuthState>(
+    return BlocListener<AuthController, AuthState>(
       listener: (context, state) {
-        if (state is AuthSuccess) {
+        if (state is Authenticated) {
           Utils.showSuccess(context: context, message: 'Cadastro realizado com sucesso');
           clearForm();
         } else if (state is AuthFailure) {
           Utils.showInfo(context: context, message: state.error);
         }
       },
-      child: BlocBuilder<AuthCubit, AuthState>(
+      child: BlocBuilder<AuthController, AuthState>(
         builder: (context, state) {
           final isLoading = state is AuthLoading;
           return FormBuilder(

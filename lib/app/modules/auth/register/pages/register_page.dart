@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projeto_unloucker/app/modules/auth/register/widgets/register_appbar_widget.dart';
 import 'package:projeto_unloucker/app/modules/auth/register/widgets/register_auth_widget.dart';
-import 'package:projeto_unloucker/app/modules/auth/services/cubit/auth_cubit.dart';
+import 'package:projeto_unloucker/app/modules/auth/services/cubit/auth_controller.dart';
 import 'package:projeto_unloucker/app/modules/auth/services/repository/auth_repository.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -17,7 +17,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return BlocProvider(
-      create: (context) => AuthCubit(authRepository: AuthRepository()),
+      create: (context) => AuthController(authRepository: AuthRepository()),
       child: SafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,

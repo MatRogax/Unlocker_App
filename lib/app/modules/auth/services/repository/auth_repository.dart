@@ -1,53 +1,93 @@
-// lib/repositories/register_repository.dart
-// import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:projeto_unloucker/app/modules/auth/exceptions/auth_exceptions.dart';
 import 'package:projeto_unloucker/app/modules/auth/services/model/auth_model.dart';
-// import 'package:projeto_unloucker/app/modules/auth/services/model/auth_model.dart';
-// import 'package:projeto_unloucker/app/utils/utils.dart';
 
 abstract class AbstractAuthRepository {
-  // Future<bool> register(RegisterModel registerModel);
+  Stream<User?> get authStateChanges;
+  User? getCurrentUser();
+  Future<void> signUp(AuthModel data);
+  Future<UserCredential> signIn(AuthModel data);
+  Future<void> signOut();
+  Future<void> sendPasswordResetEmail(String email);
 }
 
-class AuthRepository {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class AuthRepository implements AbstractAuthRepository {
+  final FirebaseAuth _firebaseAuth;
 
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
+  AuthRepository({FirebaseAuth? firebaseAuth}) : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
-  User? getCurrentUser() => _auth.currentUser;
+  @override
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
+  @override
+  User? getCurrentUser() => _firebaseAuth.currentUser;
+
+  @override
   Future<void> signUp(AuthModel data) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: data.email, password: data.password);
-    } on FirebaseAuthException catch (e) {
-      throw Exception('Erro ao registrar: ${e.message}');
+      await _firebaseAuth.createUserWithEmailAndPassword(email: data.email.trim(), password: data.password);
+    } on FirebaseAuthException catch (err) {
+      if (err.code == 'weak-password') {
+        throw AuthCredentialsException('A senha fornecida é muito fraca.', code: err.code);
+      } else if (err.code == 'email-already-in-use') {
+        throw AuthCredentialsException('Este e-mail já está em uso por outra conta.', code: err.code);
+      } else if (err.code == 'invalid-email') {
+        throw AuthCredentialsException('O formato do e-mail é inválido.', code: err.code);
+      }
+      throw AuthGenericException('Erro ao registrar: ${err.message ?? "Ocorreu um problema."}');
+    } catch (e) {
+      throw AuthGenericException('Ocorreu um erro desconhecido durante o registro.');
     }
   }
 
-  Future<void> signIn(AuthModel data) async {
+  @override
+  Future<UserCredential> signIn(AuthModel data) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: data.email, password: data.password);
-    } on FirebaseAuthException catch (e) {
-      throw Exception('Erro de login: ${e.message}');
+      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: data.email.trim(), password: data.password);
+
+      if (userCredential.user == null) {
+        throw AuthGenericException('Falha ao obter informações do usuário após o login.');
+      }
+
+      return userCredential;
+    } on FirebaseAuthException catch (err) {
+      if (err.code == 'user-not-found') {
+        throw AuthCredentialsException('Nenhum usuário encontrado com este e-mail.', code: err.code);
+      } else if (err.code == 'wrong-password' || err.code == 'invalid-credential') {
+        throw AuthCredentialsException('E-mail ou senha incorretos.', code: err.code);
+      } else if (err.code == 'user-disabled') {
+        throw AuthCredentialsException('Esta conta de usuário foi desabilitada.', code: err.code);
+      } else if (err.code == 'invalid-email') {
+        throw AuthCredentialsException('O formato do e-mail é inválido.', code: err.code);
+      }
+      throw AuthGenericException('Erro ao fazer login: ${err.message ?? "Ocorreu um problema."}');
+    } catch (err) {
+      throw AuthGenericException('Ocorreu um erro desconhecido durante o login.');
     }
   }
 
+  @override
   Future<void> signOut() async {
-    await _auth.signOut();
+    try {
+      await _firebaseAuth.signOut();
+    } catch (e) {
+      throw AuthGenericException('Erro ao fazer logout: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email.trim());
+    } on FirebaseAuthException catch (err) {
+      if (err.code == 'user-not-found') {
+        throw AuthCredentialsException('Nenhum usuário encontrado com este e-mail.', code: err.code);
+      } else if (err.code == 'invalid-email') {
+        throw AuthCredentialsException('O formato do e-mail é inválido.', code: err.code);
+      }
+      throw AuthGenericException('Erro ao enviar e-mail de redefinição de senha: ${err.message}');
+    } catch (e) {
+      throw AuthGenericException('Ocorreu um erro desconhecido.');
+    }
   }
 }
-
-// class RegisterRepository implements AbstractRegisterRepository {
-//   final Dio _dio = Utils.dioIstance;
-
-//   @override
-//   Future<bool> register(RegisterModel registerModel) async{
-//     bool response = false;
-//      await _dio.post(
-//         '/user/create',
-//         data: registerModel.toMap(),
-//       ).then((value) {
-//         response = true;
-//       });
-//       return response;
-//   }

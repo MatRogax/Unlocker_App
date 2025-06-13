@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_unloucker/app/modules/eccomerce/search/pages/search_page.dart';
 import 'package:projeto_unloucker/app/modules/eccomerce/shop/pages/shop_page.dart';
+import 'package:projeto_unloucker/app/modules/profile/pages/profile_page.dart';
 import 'package:projeto_unloucker/app/utils/constants.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -15,8 +16,7 @@ class _NavigationPageState extends State<NavigationPage> {
   final List<Map<String, dynamic>> pages = [
     {"title": "GameUnloucker", "page": const ShopPage()},
     {"title": "Pesquisa", "page": const SearchPage()},
-    {"title": "chat", "page": ""},
-    {"title": "perfil", "page": ""},
+    {"title": "perfil", "page": const ProfilePage()},
   ];
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,11 @@ class _NavigationPageState extends State<NavigationPage> {
             currentIndex = index;
           });
         },
-        items: const [BottomNavigationBarItem(icon: Icon(Icons.home), label: ""), BottomNavigationBarItem(icon: Icon(Icons.manage_search_sharp), label: "")],
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
+          BottomNavigationBarItem(icon: Icon(Icons.manage_search_sharp), label: ""),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
+        ],
       ),
     );
   }

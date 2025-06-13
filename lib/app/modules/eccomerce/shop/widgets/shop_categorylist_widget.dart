@@ -72,17 +72,27 @@ class ProductListWidget extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    products[index]["title"],
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: size.width * 0.02),
+                                    child: Text(
+                                      products[index]["title"],
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white),
+                                    ),
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(left: size.width * 0.01),
+                                        padding: EdgeInsets.only(left: size.width * 0.02),
+                                        child: Text(
+                                          "R\$ ${products[index]["price"].toStringAsFixed(2)}",
+                                          style: GoogleFonts.roboto(color: Colors.greenAccent, fontSize: size.width * 0.04, fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: size.width * 0.02),
                                         child: Container(
                                           decoration: BoxDecoration(
                                             gradient: const LinearGradient(
@@ -101,27 +111,23 @@ class ProductListWidget extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: size.width * 0.02),
-                                        child: Text(
-                                          "R\$ ${products[index]["price"].toStringAsFixed(2)}",
-                                          style: GoogleFonts.roboto(color: Colors.greenAccent, fontSize: size.width * 0.04, fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
                                     ],
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(Icons.timer, color: Colors.white, size: 15),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: size.width * 0.02),
-                                        child: Text(
-                                          "Termina em: ${products[index]["timeLeft"]}",
-                                          style: GoogleFonts.roboto(color: Colors.white, fontSize: size.width * 0.03),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: size.width * 0.015),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Icon(Icons.timer, color: Colors.white, size: 15),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: size.width * 0.02),
+                                          child: Text(
+                                            "Termina em: ${products[index]["timeLeft"]}",
+                                            style: GoogleFonts.roboto(color: Colors.white, fontSize: size.width * 0.03),
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                   ElevatedButton(
                                     onPressed: () => null,

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:projeto_unloucker/app/modules/auth/login/widgets/login_form_widget.dart'; // Wrapper de estilo
-import 'package:projeto_unloucker/app/modules/auth/services/cubit/auth_cubit.dart';
+import 'package:projeto_unloucker/app/modules/auth/login/widgets/login_form_widget.dart';
+import 'package:projeto_unloucker/app/modules/auth/services/cubit/auth_controller.dart';
 import 'package:projeto_unloucker/app/modules/auth/services/model/auth_model.dart';
 import 'package:projeto_unloucker/app/utils/constants.dart';
 import 'package:projeto_unloucker/app/utils/utils.dart';
@@ -12,7 +12,7 @@ class WidgetFormLogin extends StatefulWidget {
   const WidgetFormLogin({super.key});
 
   @override
-  State<WidgetFormLogin> createState() => _WidgetFormLoginState(); // Nome do State corrigido
+  State<WidgetFormLogin> createState() => _WidgetFormLoginState();
 }
 
 class _WidgetFormLoginState extends State<WidgetFormLogin> {
@@ -34,7 +34,7 @@ class _WidgetFormLoginState extends State<WidgetFormLogin> {
 
     final model = AuthModel(email: data['email'], password: data['senha']);
 
-    await context.read<AuthCubit>().performSignIn(model);
+    await context.read<AuthController>().performSignIn(model);
   }
 
   void clearForm() {
@@ -55,9 +55,9 @@ class _WidgetFormLoginState extends State<WidgetFormLogin> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return BlocListener<AuthCubit, AuthState>(
+    return BlocListener<AuthController, AuthState>(
       listener: (context, state) async {
-        if (state is AuthSuccess) {
+        if (state is Authenticated) {
           Utils.showSuccess(context: context, message: 'Login realizado com sucesso');
           clearForm();
           Navigator.pushNamedAndRemoveUntil(context, '/shop', (route) => false);
@@ -66,7 +66,7 @@ class _WidgetFormLoginState extends State<WidgetFormLogin> {
           Utils.showInfo(context: context, message: state.error);
         }
       },
-      child: BlocBuilder<AuthCubit, AuthState>(
+      child: BlocBuilder<AuthController, AuthState>(
         builder: (context, state) {
           final isLoading = state is AuthLoading;
           return FormBuilder(
