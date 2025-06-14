@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projeto_unloucker/app/modules/eccomerce/product/services/cubit/product_controller.dart';
+import 'package:projeto_unloucker/app/modules/eccomerce/product/services/model/product_model.dart';
 import 'package:projeto_unloucker/app/modules/eccomerce/shop/widgets/shop_card_category_widget.dart';
 import 'package:projeto_unloucker/app/modules/eccomerce/shop/widgets/shop_categorylist_widget.dart';
 // import 'package:projeto_unloucker/app/modules/eccomerce/shop/widgets/shop_products_category_widget.dart';
@@ -15,6 +19,8 @@ class ShopPage extends StatefulWidget {
 
 class _ShopPageState extends State<ShopPage> {
   int selectedIndex = -1;
+  late List<ProductModel> productsModel;
+  ProductController controller = Modular.get<ProductController>();
 
   List<String> imagesPrincipalCarrousel = [
     "assets/images/eldenring3.png",
@@ -39,6 +45,21 @@ class _ShopPageState extends State<ShopPage> {
     {"title": "Elden Ring Shadow of the Erdtree", "discount": 40, "price": 100.0, "image": "assets/images/eldenring3.png", "timeLeft": "4h 5m"},
     {"title": "Naruto Ultimate Ninja Storm 4", "discount": 60, "price": 150.0, "image": "assets/images/narutocard.jpg", "timeLeft": "3h 20m"},
   ];
+
+  Future<void> initModule() async {
+    await controller.fetchDiscoverProducts();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initModule();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,15 +131,43 @@ class _ShopPageState extends State<ShopPage> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: size.width * 0.05),
-                  child: CustomCarousel(images: imagesPrincipalCarrousel, maxHeight: size.height * 0.25, itemWidth: size.width * 0.9),
+                BlocBuilder<ProductController, ProductState>(
+                  bloc: controller,
+                  builder: (context, state) {
+                    if (state is ProductLoading) {
+                      return const Center(child: Padding(padding: EdgeInsets.symmetric(vertical: 40.0), child: CircularProgressIndicator()));
+                    }
+
+                    if (state is ProductsLoadSuccess) {
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: size.width * 0.05),
+                            child: CustomCarousel(images: imagesPrincipalCarrousel, maxHeight: size.height * 0.25, itemWidth: size.width * 0.9),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(size.width * 0.02),
+                            child: ProductListWidget(title: "Mais Vendidos", products: state.products, size: size),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(size.width * 0.04),
+                            child: ProductListWidget(title: "Promoção", products: state.products, size: size),
+                          ),
+                        ],
+                      );
+                    }
+
+                    if (state is ProductFailure) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text('Erro ao carregar conteúdo: ${state.error}', style: const TextStyle(color: Colors.red)),
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
                 ),
-                Padding(padding: EdgeInsets.all(size.width * 0.02), child: ProductListWidget(title: "Mais Vendidos", products: products, size: size)),
-                Padding(padding: EdgeInsets.all(size.width * 0.04), child: ProductListWidget(title: "Promoção", products: products, size: size)),
-                Padding(padding: EdgeInsets.all(size.width * 0.04), child: ProductListWidget(title: "Console", products: products, size: size)),
-                Padding(padding: EdgeInsets.all(size.width * 0.04), child: ProductListWidget(title: "Steam", products: products, size: size)),
-                Padding(padding: EdgeInsets.all(size.width * 0.04), child: ProductListWidget(title: "Epic Games", products: products, size: size)),
               ],
             ),
           ),

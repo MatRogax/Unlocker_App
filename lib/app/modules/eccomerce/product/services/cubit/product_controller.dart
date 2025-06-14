@@ -13,9 +13,10 @@ class ProductController extends Cubit<ProductState> {
   ProductController({required AbstractProductRepository productRepository}) : _productRepository = productRepository, super(ProductInitial());
 
   Future<void> fetchDiscoverProducts({int page = 1, int pageSize = 20, String? ordering}) async {
+    late List<ProductModel> products = [];
     emit(ProductLoading());
     try {
-      final products = await _productRepository.getDiscoverGames(page: page, pageSize: pageSize, ordering: ordering);
+      products = await _productRepository.getDiscoverGames(page: page, pageSize: pageSize, ordering: ordering);
       emit(ProductsLoadSuccess(products));
     } catch (e) {
       emit(ProductFailure(e.toString()));

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:projeto_unloucker/app/modules/eccomerce/product/services/model/product_model.dart';
 
 class ProductListWidget extends StatelessWidget {
   final String title;
-  final List<Map<String, dynamic>> products;
+  final List<ProductModel> products;
   final Size size;
 
   const ProductListWidget({Key? key, required this.title, required this.products, required this.size}) : super(key: key);
@@ -61,7 +62,7 @@ class ProductListWidget extends StatelessWidget {
                             flex: 3,
                             child: ClipRRect(
                               borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                              child: Image.asset(products[index]["image"], fit: BoxFit.cover, width: double.infinity),
+                              child: Image.asset(products[index].backgroundImage!, fit: BoxFit.cover, width: double.infinity),
                             ),
                           ),
                           Expanded(
@@ -75,7 +76,7 @@ class ProductListWidget extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: size.width * 0.02),
                                     child: Text(
-                                      products[index]["title"],
+                                      products[index].name,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white),
@@ -87,7 +88,7 @@ class ProductListWidget extends StatelessWidget {
                                       Padding(
                                         padding: EdgeInsets.only(left: size.width * 0.02),
                                         child: Text(
-                                          "R\$ ${products[index]["price"].toStringAsFixed(2)}",
+                                          "R\$ ${products[index].id.toStringAsFixed(2)}",
                                           style: GoogleFonts.roboto(color: Colors.greenAccent, fontSize: size.width * 0.04, fontWeight: FontWeight.bold),
                                         ),
                                       ),
@@ -122,7 +123,7 @@ class ProductListWidget extends StatelessWidget {
                                         Padding(
                                           padding: EdgeInsets.only(left: size.width * 0.02),
                                           child: Text(
-                                            "Termina em: ${products[index]["timeLeft"]}",
+                                            "Termina em: ${products[index].name}",
                                             style: GoogleFonts.roboto(color: Colors.white, fontSize: size.width * 0.03),
                                           ),
                                         ),
