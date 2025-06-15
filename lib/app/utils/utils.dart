@@ -1,11 +1,11 @@
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:projeto_unloucker/app/utils/constants.dart';
 
 class Utils {
-  static String apiBaseUrl = dotenv.env['API_BASE_URL'] ?? "http://172.18.144.1:3000";
+  static String apiKey = "2e271329609241c49c78fa1f0c203155";
 
   static void showToast({required BuildContext context, required String message}) {
     Fluttertoast.showToast(
@@ -19,10 +19,10 @@ class Utils {
     );
   }
 
-  static Dio get dioIstance {
-    final options = BaseOptions(baseUrl: apiBaseUrl);
-    return Dio(options);
-  }
+  // static Dio get dioIstance {
+  //   final options = BaseOptions(baseUrl: apiBaseUrl);
+  //   return Dio(options);
+  // }
 
   static void showSuccess({required BuildContext context, required String message}) {
     _showSnackbar(context: context, message: message, backgroundColor: Colors.green.shade700, icon: Icons.check_circle_outline);

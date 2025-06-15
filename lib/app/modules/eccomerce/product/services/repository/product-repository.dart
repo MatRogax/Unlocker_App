@@ -1,6 +1,6 @@
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:flutter/foundation.dart'; // Para kDebugMode
-import 'package:projeto_unloucker/app/modules/eccomerce/product/services/model/product_model.dart'; // Certifique-se que GameModel está aqui
+import 'package:dio/dio.dart';
+import 'package:projeto_unloucker/app/modules/eccomerce/product/services/model/product_model.dart';
+import 'package:projeto_unloucker/app/utils/utils.dart';
 
 abstract class AbstractProductRepository {
   Future<List<ProductModel>> searchGames(String query, {int pageSize = 10});
@@ -9,64 +9,61 @@ abstract class AbstractProductRepository {
 }
 
 class ProductRepository implements AbstractProductRepository {
-  final FirebaseFunctions _functions;
-
-  ProductRepository({FirebaseFunctions? functions}) : _functions = functions ?? FirebaseFunctions.instanceFor(region: 'southamerica-east1') {
-    if (kDebugMode) {
-      _functions.useFunctionsEmulator('localhost', 5001);
-    }
-  }
-
-  Future<dynamic> _callFunction(String functionName, Map<String, dynamic> params) async {
-    try {
-      final callable = _functions.httpsCallable(functionName, options: HttpsCallableOptions(timeout: const Duration(seconds: 30)));
-      final HttpsCallableResult result = await callable.call(params);
-      return result.data;
-    } on FirebaseFunctionsException catch (e) {
-      throw Exception("Erro ao comunicar com o servidor: ${e.message ?? e.code}");
-    } catch (e) {
-      throw Exception("Ocorreu um erro inesperado. Tente novamente mais tarde.");
-    }
-  }
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'https://api.rawg.io/api', queryParameters: {'key': Utils.apiKey}));
 
   @override
   Future<List<ProductModel>> searchGames(String query, {int pageSize = 10}) async {
-    final responseData = await _callFunction('searchRawgGames', {'query': query, 'pageSize': pageSize});
+    try {
+      final response = await _dio.get('/games', queryParameters: {'search': query, 'page_size': pageSize});
 
-    if (responseData == null || responseData['results'] == null) {
-      return [];
+      if (response.data == null || response.data['results'] == null) {
+        return [];
+      }
+
+      final List results = response.data['results'] as List;
+      final games = results.map((gameData) => ProductModel.fromJson(gameData as Map<String, dynamic>)).toList();
+      return games;
+    } on DioException catch (e) {
+      throw Exception("Erro ao buscar jogos: ${e.message}");
+    } catch (e) {
+      throw Exception("Ocorreu um erro inesperado ao processar os dados.");
     }
-
-    final List results = responseData['results'] as List;
-    List<ProductModel> games = results.map((gameData) => ProductModel.fromJson(gameData as Map<String, dynamic>)).toList();
-
-    return games;
   }
 
   @override
   Future<ProductModel> getGameDetails(int gameId) async {
-    final responseData = await _callFunction('getRawgGameDetails', {'gameId': gameId});
+    try {
+      final response = await _dio.get('/games/$gameId');
 
-    if (responseData == null) {
-      throw Exception('Não foram encontrados detalhes para o jogo com ID $gameId.');
+      if (response.data == null) {
+        throw Exception('Não foram encontrados detalhes para o jogo com ID $gameId.');
+      }
+
+      final gameDetails = ProductModel.fromJson(response.data as Map<String, dynamic>);
+      return gameDetails;
+    } on DioException catch (e) {
+      throw Exception("Erro ao obter detalhes do jogo: ${e.message}");
+    } catch (e) {
+      throw Exception("Ocorreu um erro inesperado ao processar os dados.");
     }
-
-    ProductModel gameDetails = ProductModel.fromJson(responseData as Map<String, dynamic>);
-
-    return gameDetails;
   }
 
   @override
   Future<List<ProductModel>> getDiscoverGames({int page = 1, int pageSize = 20, String? ordering}) async {
-    final responseData = await _callFunction('getRawgDiscoverGames', {'page': page, 'pageSize': pageSize, 'ordering': ordering ?? '-added'});
+    try {
+      final response = await _dio.get('/games', queryParameters: {'page': page, 'page_size': pageSize, 'ordering': ordering ?? '-added'});
 
-    if (responseData == null || responseData['results'] == null) {
-      return [];
+      if (response.data == null || response.data['results'] == null) {
+        return [];
+      }
+
+      final List results = response.data['results'] as List;
+      final discoverGames = results.map((gameData) => ProductModel.fromJson(gameData as Map<String, dynamic>)).toList();
+      return discoverGames;
+    } on DioException catch (e) {
+      throw Exception("Erro ao descobrir jogos: ${e.message}");
+    } catch (e) {
+      throw Exception("Ocorreu um erro inesperado ao processar os dados.");
     }
-
-    final List results = responseData['results'] as List;
-
-    List<ProductModel> discoverGames = results.map((gameData) => ProductModel.fromJson(gameData as Map<String, dynamic>)).toList();
-    return discoverGames;
   }
 }
