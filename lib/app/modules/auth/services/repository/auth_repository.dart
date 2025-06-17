@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projeto_unloucker/app/modules/auth/exceptions/auth_exceptions.dart';
 import 'package:projeto_unloucker/app/modules/auth/services/model/auth_model.dart';
+import 'package:projeto_unloucker/app/modules/profile/services/repository/profile_repository.dart';
 
 abstract class AbstractAuthRepository {
   Stream<User?> get authStateChanges;
@@ -9,12 +10,16 @@ abstract class AbstractAuthRepository {
   Future<UserCredential> signIn(AuthModel data);
   Future<void> signOut();
   Future<void> sendPasswordResetEmail(String email);
+  Future<void> deleteUserAccount();
 }
 
 class AuthRepository implements AbstractAuthRepository {
   final FirebaseAuth _firebaseAuth;
+  final AbstractProfileRepository _profileRepository;
 
-  AuthRepository({FirebaseAuth? firebaseAuth}) : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
+  AuthRepository({FirebaseAuth? firebaseAuth, required AbstractProfileRepository profileRepository})
+    : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+      _profileRepository = profileRepository;
 
   @override
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
@@ -25,7 +30,11 @@ class AuthRepository implements AbstractAuthRepository {
   @override
   Future<void> signUp(AuthModel data) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(email: data.email.trim(), password: data.password);
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: data.email.trim(), password: data.password);
+
+      if (userCredential.user != null) {
+        await _profileRepository.createProfile(userCredential.user!);
+      }
     } on FirebaseAuthException catch (err) {
       if (err.code == 'weak-password') {
         throw AuthCredentialsException('A senha fornecida é muito fraca.', code: err.code);
@@ -91,14 +100,21 @@ class AuthRepository implements AbstractAuthRepository {
     }
   }
 
-  Future<void> deletarUsuarioDoAuth() async {
+  @override
+  Future<void> deleteUserAccount() async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = _firebaseAuth.currentUser;
       if (user != null) {
+        await _profileRepository.deleteProfile(user.uid);
         await user.delete();
+      } else {
+        throw AuthGenericException('Nenhum usuário logado para deletar.');
       }
     } catch (err) {
-      throw AuthGenericException('Erro ao deletar usuário: ${err.toString()}');
+      if (err is FirebaseAuthException && err.code == 'requires-recent-login') {
+        throw AuthGenericException('Esta operação é sensível e requer autenticação recente. Por favor, faça login novamente e tente de novo.');
+      }
+      throw AuthGenericException('Erro ao deletar conta: ${err.toString()}');
     }
   }
 }

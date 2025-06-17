@@ -4,17 +4,21 @@ import 'package:projeto_unloucker/app/modules/auth/login/pages/login_page.dart';
 import 'package:projeto_unloucker/app/modules/auth/register/pages/register_page.dart';
 import 'package:projeto_unloucker/app/modules/auth/services/cubit/auth_controller.dart';
 import 'package:projeto_unloucker/app/modules/auth/services/repository/auth_repository.dart';
-import 'package:projeto_unloucker/app/modules/eccomerce/navigation/pages/navigation_page.dart';
 import 'package:projeto_unloucker/app/modules/eccomerce/product/services/cubit/product_controller.dart';
 import 'package:projeto_unloucker/app/modules/eccomerce/product/services/repository/product-repository.dart';
+import 'package:projeto_unloucker/app/modules/eccomerce/navigation/pages/navigation_page.dart';
+import 'package:projeto_unloucker/app/modules/profile/services/cubit/profile_controller.dart';
+import 'package:projeto_unloucker/app/modules/profile/services/repository/profile_repository.dart';
 
 class AppModule extends Module {
   @override
   void binds(Injector i) {
-    i.addSingleton<AbstractAuthRepository>(AuthRepository.new);
-    i.add<AuthController>(() => AuthController(authRepository: i.get()));
-
+    i.addSingleton<AbstractProfileRepository>(ProfileRepository.new);
     i.addSingleton<AbstractProductRepository>(ProductRepository.new);
+    i.addSingleton<AbstractAuthRepository>(() => AuthRepository(profileRepository: i.get()));
+
+    i.addSingleton<AuthController>(() => AuthController(authRepository: i.get()));
+    i.add<ProfileController>(() => ProfileController(profileRepository: i.get()));
     i.add<ProductController>(() => ProductController(productRepository: i.get()));
   }
 

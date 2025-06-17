@@ -28,14 +28,26 @@ class Utils {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text(title),
+            title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
             content: Text(subtitle),
             actions: [
-              Row(
-                children: [
-                  ElevatedButton(onPressed: () => onConfirm(), child: const Text("Yes"), style: ElevatedButton.styleFrom(backgroundColor: Colors.green)),
-                  ElevatedButton(onPressed: () => Modular.to.pop(), child: const Text("No"), style: ElevatedButton.styleFrom(backgroundColor: Colors.red)),
-                ],
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => onConfirm(),
+                      child: const Text("Yes", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    ),
+                    SizedBox(width: 20),
+                    ElevatedButton(
+                      onPressed: () => Modular.to.pop(),
+                      child: const Text("No", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

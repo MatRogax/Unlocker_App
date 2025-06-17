@@ -82,6 +82,17 @@ class AuthController extends Cubit<AuthState> {
     }
   }
 
+  Future<void> performDeleteAccount() async {
+    emit(AuthLoading());
+    try {
+      await _authRepository.deleteUserAccount();
+    } on AuthGenericException catch (e) {
+      emit(AuthFailure(e.message));
+    } catch (e) {
+      emit(AuthFailure("Ocorreu um erro inesperado ao deletar a conta."));
+    }
+  }
+
   @override
   Future<void> close() {
     _userSubscription?.cancel();

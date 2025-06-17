@@ -4,6 +4,7 @@ import 'package:projeto_unloucker/app/modules/auth/login/widgets/login_appbar_wi
 import 'package:projeto_unloucker/app/modules/auth/login/widgets/login_auth_widget.dart';
 import 'package:projeto_unloucker/app/modules/auth/services/cubit/auth_controller.dart';
 import 'package:projeto_unloucker/app/modules/auth/services/repository/auth_repository.dart';
+import 'package:projeto_unloucker/app/modules/profile/services/repository/profile_repository.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return BlocProvider(
-      create: (context) => AuthController(authRepository: AuthRepository()),
+      create: (context) => AuthController(authRepository: AuthRepository(profileRepository: ProfileRepository())),
       child: SafeArea(
         child: Scaffold(
           body: SizedBox(

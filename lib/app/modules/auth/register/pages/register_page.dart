@@ -4,6 +4,7 @@ import 'package:projeto_unloucker/app/modules/auth/register/widgets/register_app
 import 'package:projeto_unloucker/app/modules/auth/register/widgets/register_auth_widget.dart';
 import 'package:projeto_unloucker/app/modules/auth/services/cubit/auth_controller.dart';
 import 'package:projeto_unloucker/app/modules/auth/services/repository/auth_repository.dart';
+import 'package:projeto_unloucker/app/modules/profile/services/repository/profile_repository.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -17,7 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return BlocProvider(
-      create: (context) => AuthController(authRepository: AuthRepository()),
+      create: (context) => AuthController(authRepository: AuthRepository(profileRepository: ProfileRepository())),
       child: SafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
