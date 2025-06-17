@@ -1,11 +1,15 @@
 // import 'package:dio/dio.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:projeto_unloucker/app/utils/constants.dart';
 
 class Utils {
   static String apiKey = "2e271329609241c49c78fa1f0c203155";
+  static const bool admin = true;
 
   static void showToast({required BuildContext context, required String message}) {
     Fluttertoast.showToast(
@@ -19,10 +23,102 @@ class Utils {
     );
   }
 
-  // static Dio get dioIstance {
-  //   final options = BaseOptions(baseUrl: apiBaseUrl);
-  //   return Dio(options);
-  // }
+  static void showAlertDialog({required BuildContext context, required String title, String subtitle = "", required Function() onConfirm}) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(title),
+            content: Text(subtitle),
+            actions: [
+              Row(
+                children: [
+                  ElevatedButton(onPressed: () => onConfirm(), child: const Text("Yes"), style: ElevatedButton.styleFrom(backgroundColor: Colors.green)),
+                  ElevatedButton(onPressed: () => Modular.to.pop(), child: const Text("No"), style: ElevatedButton.styleFrom(backgroundColor: Colors.red)),
+                ],
+              ),
+            ],
+          ),
+    );
+  }
+
+  static String generateSubTitleUser() {
+    final random = Random();
+
+    const adjetivos = [
+      'Lendário',
+      'Implacável',
+      'Sombrio',
+      'Espectral',
+      'Mestre',
+      'Aprendiz',
+      'Explorador',
+      'Veterano',
+      'Novato',
+      'Digital',
+      'Cromado',
+      'Corrompido',
+      'Iluminado',
+      'Silencioso',
+      'Indomável',
+      'Quântico',
+      'Frenético',
+    ];
+
+    const substantivos = [
+      'Campeão',
+      'Gladiador',
+      'Sentinela',
+      'Algoz',
+      'Peregrino',
+      'Estrategista',
+      'Mercenário',
+      'Fantasma',
+      'Desafiante',
+      'Sobrevivente',
+      'Navegador',
+      'Cronomante',
+      'Caçador de Glitch',
+      'Streamer',
+      'Speedrunner',
+    ];
+
+    const dominios = [
+      'da Arena',
+      'do Abismo',
+      'de Valhalla',
+      'do Nexus',
+      'da Última Fronteira',
+      'dos Pixels',
+      'do Código-Fonte',
+      'das Sombras',
+      'do Vazio',
+      'de Cyberpunk',
+      'do Ping Alto',
+      'da Realidade Virtual',
+      'do Multiverso',
+    ];
+    final tipoDeTitulo = random.nextInt(3);
+
+    switch (tipoDeTitulo) {
+      case 0:
+        final adjetivoAleatorio = adjetivos[random.nextInt(adjetivos.length)];
+        final substantivoAleatorio = substantivos[random.nextInt(substantivos.length)];
+        return '$adjetivoAleatorio $substantivoAleatorio';
+
+      case 1:
+        final substantivoAleatorio = substantivos[random.nextInt(substantivos.length)];
+        final dominioAleatorio = dominios[random.nextInt(dominios.length)];
+        return '$substantivoAleatorio $dominioAleatorio';
+
+      case 2:
+        final titulosUnicos = [...adjetivos, ...substantivos];
+        final tituloAleatorio = titulosUnicos[random.nextInt(titulosUnicos.length)];
+        return 'O $tituloAleatorio';
+      default:
+        return 'Jogador Profissional';
+    }
+  }
 
   static void showSuccess({required BuildContext context, required String message}) {
     _showSnackbar(context: context, message: message, backgroundColor: Colors.green.shade700, icon: Icons.check_circle_outline);

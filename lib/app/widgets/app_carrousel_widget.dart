@@ -56,7 +56,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5, offset: Offset(0, 3))],
             ),
-            child: ClipRRect(borderRadius: BorderRadius.circular(10), child: Image.asset(widget.images[index], fit: BoxFit.cover)),
+            child: ClipRRect(borderRadius: BorderRadius.circular(10), child: Image.network(widget.images[index], fit: BoxFit.cover)),
           );
         },
       ),

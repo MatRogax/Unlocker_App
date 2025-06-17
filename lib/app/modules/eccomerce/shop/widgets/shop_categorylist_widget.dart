@@ -45,7 +45,7 @@ class ProductListWidget extends StatelessWidget {
             height: size.height * 0.5,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: products.length,
+              itemCount: products.length % 2 == 0 ? products.length : products.length + 1,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -88,7 +88,7 @@ class ProductListWidget extends StatelessWidget {
                                       Padding(
                                         padding: EdgeInsets.only(left: size.width * 0.02),
                                         child: Text(
-                                          "", // "R\$ ${products[index].id.toStringAsFixed(2)}",
+                                          "${products[index].id}", // "R\$ ${products[index].id.toStringAsFixed(2)}",
                                           style: GoogleFonts.roboto(color: Colors.greenAccent, fontSize: size.width * 0.04, fontWeight: FontWeight.bold),
                                         ),
                                       ),

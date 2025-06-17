@@ -11,7 +11,7 @@ import 'package:projeto_unloucker/app/modules/eccomerce/product/services/reposit
 class AppModule extends Module {
   @override
   void binds(Injector i) {
-    i.addSingleton<AuthRepository>(AuthRepository.new);
+    i.addSingleton<AbstractAuthRepository>(AuthRepository.new);
     i.add<AuthController>(() => AuthController(authRepository: i.get()));
 
     i.addSingleton<AbstractProductRepository>(ProductRepository.new);

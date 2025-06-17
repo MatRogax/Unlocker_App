@@ -39,7 +39,7 @@ class ProductRepository implements AbstractProductRepository {
         throw Exception('Não foram encontrados detalhes para o jogo com ID $gameId.');
       }
 
-      final gameDetails = ProductModel.fromJson(response.data as Map<String, dynamic>);
+      ProductModel gameDetails = ProductModel.fromJson(response.data as Map<String, dynamic>);
       return gameDetails;
     } on DioException catch (e) {
       throw Exception("Erro ao obter detalhes do jogo: ${e.message}");
@@ -58,7 +58,7 @@ class ProductRepository implements AbstractProductRepository {
       }
 
       final List results = response.data['results'] as List;
-      final discoverGames = results.map((gameData) => ProductModel.fromJson(gameData as Map<String, dynamic>)).toList();
+      List<ProductModel> discoverGames = results.map((gameData) => ProductModel.fromJson(gameData as Map<String, dynamic>)).toList();
       return discoverGames;
     } on DioException catch (e) {
       throw Exception("Erro ao descobrir jogos: ${e.message}");

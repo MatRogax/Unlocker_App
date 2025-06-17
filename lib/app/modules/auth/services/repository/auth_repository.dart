@@ -90,4 +90,15 @@ class AuthRepository implements AbstractAuthRepository {
       throw AuthGenericException('Ocorreu um erro desconhecido.');
     }
   }
+
+  Future<void> deletarUsuarioDoAuth() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await user.delete();
+      }
+    } catch (err) {
+      throw AuthGenericException('Erro ao deletar usuário: ${err.toString()}');
+    }
+  }
 }
